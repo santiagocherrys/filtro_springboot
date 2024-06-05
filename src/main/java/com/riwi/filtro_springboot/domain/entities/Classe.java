@@ -2,6 +2,7 @@ package com.riwi.filtro_springboot.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,10 +20,10 @@ public class Classe {
     private String name;
     @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
-    @Column(nullable = false)
+    @CreationTimestamp
     private LocalDateTime created_at;
     @Column(nullable = false)
-    private Boolean active;
+    private boolean active;
 
     //Relaciones
     @OneToMany(mappedBy = "classe",

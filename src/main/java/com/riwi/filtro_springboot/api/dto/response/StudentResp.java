@@ -1,24 +1,26 @@
 package com.riwi.filtro_springboot.api.dto.response;
 
-import com.riwi.filtro_springboot.api.dto.request.StudentToClassResp;
-import com.riwi.filtro_springboot.domain.repositories.StudentRepository;
+import com.riwi.filtro_springboot.domain.entities.Classe;
+import jakarta.persistence.Column;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClasseResp {
+public class StudentResp {
+    private Long id;
     private String name;
+    private String email;
     private LocalDateTime created_at;
-    private String description;
     private boolean active;
-    private List<StudentToClassResp> students;
-    //private List<LessonToClassResp>  lessons;
+    private ClasseToStudentResp classe;
 }
