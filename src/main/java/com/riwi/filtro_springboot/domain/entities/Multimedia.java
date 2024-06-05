@@ -16,10 +16,13 @@ public class Multimedia {
     @Column(columnDefinition = "Text", nullable = false)
     private String url;
     @Column(nullable = false)
-    private Long lesson_id;
-    @Column(nullable = false)
     private LocalDateTime created_at;
     @Column(nullable = false)
     private boolean active;
+
+    //Relaciones
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lesson_id", referencedColumnName = "id")
+    private Lesson lesson;
 
 }

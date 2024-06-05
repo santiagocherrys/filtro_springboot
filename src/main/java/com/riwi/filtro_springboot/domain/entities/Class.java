@@ -1,8 +1,12 @@
 package com.riwi.filtro_springboot.domain.entities;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Entity
 public class Class {
     @Id
@@ -16,5 +20,22 @@ public class Class {
     private LocalDateTime created_at;
     @Column(nullable = false)
     private boolean active;
+
+    //Relaciones
+    @OneToMany(mappedBy = "classe",
+                cascade =CascadeType.ALL,
+                orphanRemoval = false,
+                fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Student> students;
+
+    @OneToMany(mappedBy = "classe",
+                cascade = CascadeType.ALL,
+                orphanRemoval = false,
+                fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Lesson> lessons;
 
 }

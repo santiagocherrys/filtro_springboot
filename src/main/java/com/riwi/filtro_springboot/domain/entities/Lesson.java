@@ -1,8 +1,11 @@
 package com.riwi.filtro_springboot.domain.entities;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class Lesson {
@@ -11,10 +14,27 @@ public class Lesson {
     private Long id;
     @Column(nullable = false)
     private String title;
-    @Column(nullable = false)
-    private Long class_id;
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String content;
+
     @Column(nullable = false)
     private LocalDateTime created_at;
     @Column(nullable = false)
     private boolean active;
+
+    //Relaciones
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "class_id", referencedColumnName = "id")
+    private Class classe;
+
+    @OneToMany(mappedBy = "lesson",
+            cascade = CascadeType.ALL,
+            orphanRemoval = false,
+            fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Multimedia> multimedias;
+
+
+
 }

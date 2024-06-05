@@ -14,10 +14,14 @@ public class Student {
     @Column(nullable = false)
     private String email;
     @Column(nullable = false)
-    private Long class_id;
-    @Column(nullable = false)
     private LocalDateTime created_at;
     @Column(nullable = false)
     private boolean active;
+
+    //Relaciones
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "class_id", referencedColumnName = "id")
+    private Class classe;
+
 
 }
