@@ -7,6 +7,7 @@ import com.riwi.filtro_springboot.domain.entities.Classe;
 import com.riwi.filtro_springboot.domain.entities.Student;
 import com.riwi.filtro_springboot.domain.repositories.ClasseRepository;
 import com.riwi.filtro_springboot.infraestructure.abstract_services.IClasseService;
+import com.riwi.filtro_springboot.util.exceptions.IdNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +34,11 @@ public class ClasseService implements IClasseService {
     @Override
     public ClasseResp create(ClasseReq request) {
         Classe classe = this.requestToEntity(request);
-
+        classe.setStudents(new ArrayList<>());
         //Se crea los campos vacios
         ClasseResp classResp = this.entityToResponse(this.classeRepository.save(classe));
 
-        //Al crear se crea estudiantes vacio
-        classResp.setStudents(new ArrayList<>());
+
         return classResp;
     }
 
@@ -61,7 +61,6 @@ public class ClasseService implements IClasseService {
 
     @Override
     public ClasseResp getById(Long id) {
-
         return  this.entityToResponse(this.find(id));
     }
     private Classe requestToEntity(ClasseReq classe){
@@ -87,7 +86,7 @@ public class ClasseService implements IClasseService {
                 .stream()
                 .map(this::entityToStudentRespo).collect(Collectors.toList());
 
-
+        classeResp.setStudents(students);
         return classeResp;
     }
 
@@ -102,6 +101,6 @@ public class ClasseService implements IClasseService {
     }
 
     private Classe find(Long id){
-        return this.classeRepository.findById(id).orElseThrow();
+        return this.classeRepository.findById(id).orElseThrow(() -> new IdNotFoundException("Class"));
     }
 }

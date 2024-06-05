@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class ClasseController {
 
     @PostMapping
     public ResponseEntity<ClasseResp> insert(
+            @Validated
             @RequestBody ClassePostReq request){
         ClasseReq classeReq = new ClasseReq();
 

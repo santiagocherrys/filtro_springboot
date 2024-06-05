@@ -2,6 +2,7 @@ package com.riwi.filtro_springboot.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +23,7 @@ public class Lesson {
 
     @Column(nullable = false)
     private LocalDateTime created_at;
-    @Column(nullable = false)
+    @CreationTimestamp
     private boolean active;
 
     //Relaciones

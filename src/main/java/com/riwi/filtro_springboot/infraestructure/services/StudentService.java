@@ -1,16 +1,14 @@
 package com.riwi.filtro_springboot.infraestructure.services;
 
-
-import com.riwi.filtro_springboot.api.dto.request.ClasseReq;
 import com.riwi.filtro_springboot.api.dto.request.StudentReq;
-import com.riwi.filtro_springboot.api.dto.response.ClasseResp;
 import com.riwi.filtro_springboot.api.dto.response.ClasseToStudentResp;
 import com.riwi.filtro_springboot.api.dto.response.StudentResp;
 import com.riwi.filtro_springboot.domain.entities.Classe;
 import com.riwi.filtro_springboot.domain.entities.Student;
+import com.riwi.filtro_springboot.domain.repositories.ClasseRepository;
 import com.riwi.filtro_springboot.domain.repositories.StudentRepository;
-import com.riwi.filtro_springboot.infraestructure.abstract_services.IClasseService;
 import com.riwi.filtro_springboot.infraestructure.abstract_services.IStudentService;
+import com.riwi.filtro_springboot.util.exceptions.IdNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +22,9 @@ public class StudentService implements IStudentService {
 
     @Autowired
     private final StudentRepository studentRepository;
+
+    @Autowired
+    private final ClasseRepository classeRepository;
     @Override
     public void delete(Long id) {
 
@@ -31,8 +32,15 @@ public class StudentService implements IStudentService {
 
     @Override
     public StudentResp create(StudentReq request) {
-        Student student = this.requestToEntity(request);
 
+        System.out.println("esto es request" + request);
+        System.out.println("this is class_id"+ request.getClass_id());
+        //Se busca la clase
+        Classe classe = this.classeRepository.findById(request.getClass_id()).orElseThrow(() -> new IdNotFoundException("Class"));
+        Student student = this.requestToEntity(request);
+        //Se setea la clase
+        student.setClasse(classe);
+        //System.out.println("Esto es student" + classe);
         return this.entityToResponse(this.studentRepository.save(student));
     }
 
@@ -48,7 +56,8 @@ public class StudentService implements IStudentService {
 
     @Override
     public StudentResp getById(Long id) {
-        return null;
+
+        return this.entityToResponse(this.find(id));
     }
 
     private Student requestToEntity(StudentReq student){
@@ -78,5 +87,9 @@ public class StudentService implements IStudentService {
                 .created_at(classe.getCreated_at())
                 .active(classe.isActive())
                 .build();
+    }
+
+    private Student find(Long id){
+        return this.studentRepository.findById(id).orElseThrow(() -> new IdNotFoundException("Student"));
     }
 }

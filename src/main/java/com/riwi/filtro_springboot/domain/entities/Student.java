@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -21,7 +22,7 @@ public class Student {
     private String name;
     @Column(nullable = false)
     private String email;
-    @Column(nullable = false)
+    @CreationTimestamp
     private LocalDateTime created_at;
     @Column(nullable = false)
     private boolean active;
