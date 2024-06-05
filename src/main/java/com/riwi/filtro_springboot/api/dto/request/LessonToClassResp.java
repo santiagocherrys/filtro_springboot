@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClassePostReq {
-    private String name;
-    private String description;
-    private boolean active;
+public class LessonToClassResp{
+    private String prueba;
 }

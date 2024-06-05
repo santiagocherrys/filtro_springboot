@@ -15,5 +15,5 @@ public class ClasseReq {
     private String name;
     private LocalDateTime created_at;
     private String description;
-    private Boolean active;
+    private boolean active;
 }
