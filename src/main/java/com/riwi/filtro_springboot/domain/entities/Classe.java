@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Class {
+public class Classe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,7 +22,7 @@ public class Class {
     @Column(nullable = false)
     private LocalDateTime created_at;
     @Column(nullable = false)
-    private boolean active;
+    private Boolean active;
 
     //Relaciones
     @OneToMany(mappedBy = "classe",

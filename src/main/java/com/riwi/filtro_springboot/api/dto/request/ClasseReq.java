@@ -5,9 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class ClassReq {
+@NoArgsConstructor
+public class ClasseReq {
+    private String name;
+    private LocalDateTime created_at;
+    private String description;
+    private Boolean active;
 }

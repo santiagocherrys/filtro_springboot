@@ -28,7 +28,7 @@ public class Lesson {
     //Relaciones
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id", referencedColumnName = "id")
-    private Class classe;
+    private Classe classe;
 
     @OneToMany(mappedBy = "lesson",
             cascade = CascadeType.ALL,

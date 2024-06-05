@@ -27,7 +27,7 @@ public class Student {
     //Relaciones
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id", referencedColumnName = "id")
-    private Class classe;
+    private Classe classe;
 
 
 }
