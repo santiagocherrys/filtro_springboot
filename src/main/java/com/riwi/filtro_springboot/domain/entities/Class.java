@@ -1,13 +1,16 @@
 package com.riwi.filtro_springboot.domain.entities;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
+@Entity(name = "class")
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Class {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

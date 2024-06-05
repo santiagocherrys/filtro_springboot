@@ -2,10 +2,18 @@ package com.riwi.filtro_springboot.domain.entities;
 
 import com.riwi.filtro_springboot.util.enums.Type;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Entity
+@Entity(name = "multimedia")
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Multimedia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
