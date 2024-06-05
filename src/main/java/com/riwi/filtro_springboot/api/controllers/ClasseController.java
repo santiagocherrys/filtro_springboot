@@ -5,8 +5,8 @@ import com.riwi.filtro_springboot.api.dto.request.ClasseReq;
 import com.riwi.filtro_springboot.api.dto.response.ClasseResp;
 import com.riwi.filtro_springboot.infraestructure.abstract_services.IClasseService;
 import lombok.AllArgsConstructor;
-import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -36,5 +36,13 @@ public class ClasseController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<ClasseResp> getById(@PathVariable Long id){
         return ResponseEntity.ok(this.classeService.getById(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ClasseResp>> getAll(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return ResponseEntity.ok(this.classeService.getAll(page -1 , size));
     }
 }

@@ -24,5 +24,18 @@ public class StudentController{
         return ResponseEntity.ok(this.studentService.create(request));
     }
 
+    @PatchMapping(path = "/{id}/disable")
+    public ResponseEntity<StudentResp> disable(@PathVariable Long id){
+
+        return ResponseEntity.ok(this.studentService.disableById(id));
+    }
+
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<StudentResp> update(@PathVariable Long id,
+            @Validated
+            @RequestBody StudentReq request){
+        return ResponseEntity.ok(this.studentService.update(id,request));
+    }
+
 
 }

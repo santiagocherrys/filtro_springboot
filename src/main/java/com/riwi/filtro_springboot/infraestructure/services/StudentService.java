@@ -15,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Service
 @AllArgsConstructor
 public class StudentService implements IStudentService {
@@ -46,7 +49,16 @@ public class StudentService implements IStudentService {
 
     @Override
     public StudentResp update(Long id, StudentReq request) {
-        return null;
+        //Se busca el estudiante
+        Student studenthelp = this.find(id);
+
+        //Se pasa request a student
+        Student student = this.requestToEntity(request);
+        student.setId(studenthelp.getId());
+        //Se actualiza la hora
+        LocalDateTime lt = LocalDateTime.now();
+        student.setCreated_at(lt);
+        return this.entityToResponse(this.studentRepository.save(student));
     }
 
     @Override
@@ -60,12 +72,16 @@ public class StudentService implements IStudentService {
         return this.entityToResponse(this.find(id));
     }
 
+
     private Student requestToEntity(StudentReq student){
+        //Encontrar Clase
+
 
         return Student.builder()
                 .name(student.getName())
                 .email(student.getEmail())
                 .active(student.isActive())
+                .classe(this.classeRepository.findById(student.getClass_id()).orElseThrow(() -> new IdNotFoundException("Class")))
                 .build();
     }
 
@@ -73,8 +89,11 @@ public class StudentService implements IStudentService {
 
         StudentResp studentResp = new StudentResp();
 
+        System.out.println("Esto es la salida de entity"+ entity);
+        //studentResp.setCreated_at(entity.getCreated_at());
         BeanUtils.copyProperties(entity,studentResp);
         studentResp.setClasse(this.entityToClassRespo(entity.getClasse()));
+
 
         return studentResp;
     }
@@ -91,5 +110,15 @@ public class StudentService implements IStudentService {
 
     private Student find(Long id){
         return this.studentRepository.findById(id).orElseThrow(() -> new IdNotFoundException("Student"));
+    }
+
+    @Override
+    public StudentResp disableById(Long id) {
+        Student student = this.find(id);
+        //Se pone el estado a false
+        student.setActive(false);
+        //Se guarda en la base de datos
+        this.studentRepository.save(student);
+        return this.entityToResponse(student);
     }
 }

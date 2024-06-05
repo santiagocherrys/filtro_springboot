@@ -21,9 +21,9 @@ public class Lesson {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private LocalDateTime created_at;
     @CreationTimestamp
+    private LocalDateTime created_at;
+    @Column(nullable = false)
     private boolean active;
 
     //Relaciones
