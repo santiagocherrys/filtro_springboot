@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClasseResp {
+    private Long id;
     private String name;
     private LocalDateTime created_at;
     private String description;

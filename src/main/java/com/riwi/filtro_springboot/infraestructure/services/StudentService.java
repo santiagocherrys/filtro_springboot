@@ -13,10 +13,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -63,7 +65,28 @@ public class StudentService implements IStudentService {
 
     @Override
     public Page<StudentResp> getAll(int page, int size) {
-        return null;
+        if(page < 0){
+            page = 0;
+        }
+
+        PageRequest pagination = null;
+        pagination = PageRequest.of(page,size);
+
+        List<Student> students = this.studentRepository.findByNameAndActive("Adriana Gomez", true);
+        //prueba de que funciona la consulta avanzada
+        System.out.println("Esta es la consulta avanzada " + students);
+        //imprimir las clases de los estudiantes
+        System.out.println("Se imprimen las clases a la que pertenece el estudiante");
+        for(Student student : students){
+            System.out.println(student.getClasse());
+        }
+
+        //Probar por nombre
+        System.out.println("Por nombre con Query nativo " + this.studentRepository.findByNombre("Adriana Gomez"));
+        System.out.println("Prueba con Inner Join " + this.studentRepository.findByNombreClase());
+        System.out.println("Prueba con Inner Join por parametro description" + this.studentRepository.findByDescription("Todo el mundo de Java SE"));
+
+        return this.studentRepository.findAll(pagination).map(this::entityToResponse);
     }
 
     @Override

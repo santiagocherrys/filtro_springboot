@@ -80,6 +80,7 @@ public class ClasseService implements IClasseService {
         //Se crea instancia de la respuesta
         ClasseResp classeResp = new ClasseResp();
         BeanUtils.copyProperties(entity,classeResp);
+        classeResp.setId(entity.getId());
 
         //Se lee la lista de estudiantes
         List<StudentToClassResp> students = entity.getStudents()
