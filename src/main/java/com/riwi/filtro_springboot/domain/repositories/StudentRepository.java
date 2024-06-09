@@ -14,13 +14,15 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     //Busca por nombre estudiante
     List<Student> findByNameAndActive(String name, boolean active);
 
-    //Buscar por descripcion de clase
-    @Query(nativeQuery = true, value = "SELECT student.id, student.active, student.created_at, student.email, student.name, student.class_id FROM student INNER JOIN class ON student.class_id = class.id WHERE class.name = 'SpringBoot'")
-    List<Student> findByNombreClase();
+    //Buscar por nombre de clase y que esté activo estudiante en clase
+    @Query(nativeQuery = true, value = "SELECT student.id, student.active, student.created_at, student.email, student.name, student.class_id FROM student INNER JOIN class ON student.class_id = class.id WHERE class.name = :name AND student.active = true")
+    List<Student> findByNombreClase(@Param("name") String name);
 
-    @Query(nativeQuery = true, value = "SELECT student.id, student.active, student.created_at, student.email, student.name, student.class_id FROM student INNER JOIN class ON student.class_id = class.id WHERE class.description = :description")
+
+    //Buscar por descripcion de clase y que esté activo estudiante en clase
+    @Query(nativeQuery = true, value = "SELECT student.id, student.active, student.created_at, student.email, student.name, student.class_id FROM student INNER JOIN class ON student.class_id = class.id WHERE class.description = :description AND student.active = true")
     List<Student> findByDescription(@Param("description") String description);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM student WHERE name= :name")
-    List<Student> findByNombre(@Param("name") String name);
+    //@Query(nativeQuery = true, value = "SELECT * FROM student WHERE name= :name")
+    //List<Student> findByNombre(@Param("name") String name);
 }

@@ -2,6 +2,7 @@ package com.riwi.filtro_springboot.infraestructure.services;
 
 import com.riwi.filtro_springboot.api.dto.request.StudentReq;
 import com.riwi.filtro_springboot.api.dto.response.ClasseToStudentResp;
+import com.riwi.filtro_springboot.api.dto.response.StudentBasicRespo;
 import com.riwi.filtro_springboot.api.dto.response.StudentResp;
 import com.riwi.filtro_springboot.domain.entities.Classe;
 import com.riwi.filtro_springboot.domain.entities.Student;
@@ -16,9 +17,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.parser.Entity;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -82,8 +85,7 @@ public class StudentService implements IStudentService {
         }
 
         //Probar por nombre
-        System.out.println("Por nombre con Query nativo " + this.studentRepository.findByNombre("Adriana Gomez"));
-        System.out.println("Prueba con Inner Join " + this.studentRepository.findByNombreClase());
+        System.out.println("Prueba con Inner Join " + this.studentRepository.findByNombreClase("SpringBoot"));
         System.out.println("Prueba con Inner Join por parametro description" + this.studentRepository.findByDescription("Todo el mundo de Java SE"));
 
         return this.studentRepository.findAll(pagination).map(this::entityToResponse);
@@ -143,5 +145,35 @@ public class StudentService implements IStudentService {
         //Se guarda en la base de datos
         this.studentRepository.save(student);
         return this.entityToResponse(student);
+    }
+
+    @Override
+    public List<StudentBasicRespo> findStudentsByNameClass(String name) {
+        List<StudentResp> studentResps = this.studentRepository.findByNombreClase(name).stream().map(this::entityToResponse).collect(Collectors.toList());
+        return studentResps.stream().map(this::studentToStudentBasicResp).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudentBasicRespo> findStudentsByDescriptionClass(String description) {
+        List<StudentResp> studentResps = this.studentRepository.findByDescription(description).stream().map(this::entityToResponse).collect(Collectors.toList());
+
+        return studentResps.stream().map(this::studentToStudentBasicResp).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudentResp> findAll() {
+        return this.studentRepository.findAll().stream().map(this::entityToResponse).collect(Collectors.toList());
+    }
+
+    private StudentBasicRespo studentToStudentBasicResp(StudentResp student){
+        StudentBasicRespo studentBasicRespo = new StudentBasicRespo();
+
+        studentBasicRespo.setId(student.getId());
+        studentBasicRespo.setName(student.getName());
+        studentBasicRespo.setEmail(student.getEmail());
+        studentBasicRespo.setActive(student.isActive());
+        studentBasicRespo.setCreated_at(student.getCreated_at());
+
+        return studentBasicRespo;
     }
 }
