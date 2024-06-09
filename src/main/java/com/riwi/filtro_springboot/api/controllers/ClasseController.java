@@ -2,6 +2,7 @@ package com.riwi.filtro_springboot.api.controllers;
 
 import com.riwi.filtro_springboot.api.dto.request.ClassePostReq;
 import com.riwi.filtro_springboot.api.dto.request.ClasseReq;
+import com.riwi.filtro_springboot.api.dto.response.ClasseBasicResp;
 import com.riwi.filtro_springboot.api.dto.response.ClasseResp;
 import com.riwi.filtro_springboot.infraestructure.abstract_services.IClasseService;
 import lombok.AllArgsConstructor;
@@ -39,10 +40,14 @@ public class ClasseController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ClasseResp>> getAll(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size
+    public ResponseEntity<List<ClasseBasicResp>> getAll(
+            @RequestParam(defaultValue = "") String name
     ){
-        return ResponseEntity.ok(this.classeService.getAll(page -1 , size));
+        if(name.equals("")){
+            return ResponseEntity.ok(this.classeService.findAll());
+        }else{
+            return ResponseEntity.ok(this.classeService.findByName(name));
+        }
+
     }
 }

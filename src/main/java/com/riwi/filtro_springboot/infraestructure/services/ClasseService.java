@@ -2,6 +2,7 @@ package com.riwi.filtro_springboot.infraestructure.services;
 
 import com.riwi.filtro_springboot.api.dto.request.ClasseReq;
 import com.riwi.filtro_springboot.api.dto.request.StudentToClassResp;
+import com.riwi.filtro_springboot.api.dto.response.ClasseBasicResp;
 import com.riwi.filtro_springboot.api.dto.response.ClasseResp;
 import com.riwi.filtro_springboot.domain.entities.Classe;
 import com.riwi.filtro_springboot.domain.entities.Student;
@@ -91,6 +92,15 @@ public class ClasseService implements IClasseService {
         return classeResp;
     }
 
+    private ClasseBasicResp entityToBasicResponse(Classe entity){
+        //Se crea instancia de la respuesta
+        ClasseBasicResp classeBasicResp = new ClasseBasicResp();
+        BeanUtils.copyProperties(entity,classeBasicResp);
+        classeBasicResp.setId(entity.getId());
+
+        return classeBasicResp;
+    }
+
     private StudentToClassResp entityToStudentRespo(Student student){
         return StudentToClassResp.builder()
                 .id(student.getId())
@@ -103,5 +113,15 @@ public class ClasseService implements IClasseService {
 
     private Classe find(Long id){
         return this.classeRepository.findById(id).orElseThrow(() -> new IdNotFoundException("Class"));
+    }
+
+    @Override
+    public List<ClasseBasicResp> findByName(String name) {
+        return this.classeRepository.findByNameAndActive(name, true).stream().map(this::entityToBasicResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ClasseBasicResp> findAll() {
+        return this.classeRepository.findAll().stream().map(this::entityToBasicResponse).collect(Collectors.toList());
     }
 }
