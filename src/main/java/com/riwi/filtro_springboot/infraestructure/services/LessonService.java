@@ -100,4 +100,20 @@ public class LessonService implements ILessonService {
                 .created_at(classe.getCreated_at())
                 .build();
     }
+
+    @Override
+    public LessonResp disableById(Long id) {
+        Lesson lesson = this.find(id);
+
+        //Se pone el estado de la lección en false
+        lesson.setActive(false);
+
+        //Se recorre todo el contenido multimedia para deshabilitarlo tambien
+        for(Multimedia multimedia : lesson.getMultimedias()){
+            multimedia.setActive(false);
+        }
+        //Se guarda en la base de datos
+        this.lessonRepository.save(lesson);
+        return this.entityToResponse(lesson);
+    }
 }

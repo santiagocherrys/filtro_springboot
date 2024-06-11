@@ -5,10 +5,7 @@ import com.riwi.filtro_springboot.infraestructure.abstract_services.ILessonServi
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/lessons")
@@ -20,6 +17,13 @@ public class LessonController {
     @GetMapping(path = "/{id}/multimedia")
     public ResponseEntity<LessonResp> getById(@PathVariable Long id){
         return ResponseEntity.ok(this.lessonService.getById(id));
+    }
+
+    @PatchMapping(path = "/{id}/disable")
+    public ResponseEntity<LessonResp> disable(
+            @PathVariable Long id
+    ){
+        return ResponseEntity.ok(this.lessonService.disableById(id));
     }
 }
 
