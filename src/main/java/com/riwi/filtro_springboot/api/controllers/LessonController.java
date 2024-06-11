@@ -1,5 +1,6 @@
 package com.riwi.filtro_springboot.api.controllers;
 
+import com.riwi.filtro_springboot.api.dto.request.LessonReq;
 import com.riwi.filtro_springboot.api.dto.response.LessonResp;
 import com.riwi.filtro_springboot.infraestructure.abstract_services.ILessonService;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,13 @@ public class LessonController {
             @PathVariable Long id
     ){
         return ResponseEntity.ok(this.lessonService.disableById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<LessonResp> insert(
+            @RequestBody LessonReq request
+            ){
+        return ResponseEntity.ok(this.lessonService.create(request));
     }
 }
 

@@ -3,10 +3,12 @@ package com.riwi.filtro_springboot.infraestructure.services;
 import com.riwi.filtro_springboot.api.dto.request.LessonReq;
 import com.riwi.filtro_springboot.api.dto.response.ClasseBasicResp;
 import com.riwi.filtro_springboot.api.dto.response.LessonResp;
+import com.riwi.filtro_springboot.api.dto.response.MultimediaNoIdResp;
 import com.riwi.filtro_springboot.api.dto.response.MultimediaResp;
 import com.riwi.filtro_springboot.domain.entities.Classe;
 import com.riwi.filtro_springboot.domain.entities.Lesson;
 import com.riwi.filtro_springboot.domain.entities.Multimedia;
+import com.riwi.filtro_springboot.domain.repositories.ClasseRepository;
 import com.riwi.filtro_springboot.domain.repositories.LessonRepository;
 import com.riwi.filtro_springboot.infraestructure.abstract_services.ILessonService;
 import com.riwi.filtro_springboot.util.exceptions.IdNotFoundException;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +28,9 @@ public class LessonService implements ILessonService {
     @Autowired
     private final LessonRepository lessonRepository;
 
+    @Autowired
+    private final ClasseRepository classeRepository;
+
     @Override
     public void delete(Long id) {
 
@@ -32,7 +38,37 @@ public class LessonService implements ILessonService {
 
     @Override
     public LessonResp create(LessonReq request) {
-        return null;
+
+        //Se busca la clase
+        Classe classe =  this.classeRepository.findById(request.getClass_id()).orElseThrow(()-> new IdNotFoundException("Classe"));
+
+        //Se genera la lista de multimedia
+        List<Multimedia> multimedias = new ArrayList<>();
+
+        //Se pasa de multimediaresp a multimedia
+        multimedias = request.getMultimediaResps().stream().map(this::multimediaRespTomultimedia).collect(Collectors.toList());
+
+        //Se guarda la clase, las multimedias y todos los datos en lesson
+        Lesson lesson = new Lesson();
+        lesson.setTitle(request.getTitle());
+        lesson.setContent(request.getContent());
+        lesson.setActive(request.isActive());
+        lesson.setClasse(classe);
+        lesson.setMultimedias(multimedias);
+
+        //Se guarda en la base de datos
+        lesson = this.lessonRepository.save(lesson);
+
+        System.out.println("Este es tu id" + lesson.getId());
+
+
+        //Despues de guardar en la base de  datos se tiene que asociar el id de lecciones con el multimedia y guardarlo
+        //en las bases de datos
+        for(Multimedia multimedia: lesson.getMultimedias()){
+            multimedia.setLesson(lesson);
+        }
+        lesson = this.lessonRepository.save(lesson);
+        return this.entityToResponse(lesson);
     }
 
     @Override
@@ -115,5 +151,13 @@ public class LessonService implements ILessonService {
         //Se guarda en la base de datos
         this.lessonRepository.save(lesson);
         return this.entityToResponse(lesson);
+    }
+
+    private Multimedia multimediaRespTomultimedia(MultimediaNoIdResp multimediaResp){
+        return Multimedia.builder()
+                .type(multimediaResp.getType())
+                .url(multimediaResp.getUrl())
+                .active(multimediaResp.isActive())
+                .build();
     }
 }
